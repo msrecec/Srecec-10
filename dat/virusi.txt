@@ -1,0 +1,9 @@
+21
+COVID-19
+1,2,3
+22
+Gripa
+1,2
+23
+KONJUKTIVITIS
+2
