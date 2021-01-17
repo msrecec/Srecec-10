@@ -1,4 +1,4 @@
-package main.java.sample;
+package main.java.sample.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,15 +22,16 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PretragaBolestiController implements Initializable {
-    private static ObservableList<Bolest> observableListaBolesti;
+public class PretragaVirusiController implements Initializable {
 
-    private static List<Bolest> bolesti;
+    private static List<Bolest> virusi;
 
-    private static final Logger logger = LoggerFactory.getLogger(PretragaBolestiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PretragaVirusiController.class);
+
+    private static ObservableList<Bolest> observableListaVirusa;
 
     @FXML
-    private TableView tablicaBolesti ;
+    private TableView tablicaVirusa ;
     @FXML
     private TableColumn<Bolest, String> nazivStupac;
     @FXML
@@ -38,44 +39,44 @@ public class PretragaBolestiController implements Initializable {
     @FXML
     private TableColumn<Long, String> idStupac;
     @FXML
-    private TextField unosNazivaBolesti;
+    private TextField unosNazivaVirusa;
 
     public void pretraga() throws PraznoPolje {
-        if(unosNazivaBolesti.getText().isBlank()) {
+        if(unosNazivaVirusa.getText().isBlank()) {
             throw new PraznoPolje();
         }
 
-        String uneseniNazivBolesti = unosNazivaBolesti.getText().toLowerCase();
+        String uneseniNazivVirusa = unosNazivaVirusa.getText().toLowerCase();
 
         Optional<List<Bolest>> filtriranaBolest = Optional.ofNullable(
-                bolesti
-                .stream()
-                .filter(z -> (!(z instanceof Virus)) && z.getNaziv().toLowerCase().contains(uneseniNazivBolesti))
-                .collect(Collectors.toList())
+                virusi
+                        .stream()
+                        .filter(z -> ((z instanceof Virus)) && z.getNaziv().toLowerCase().contains(uneseniNazivVirusa))
+                        .collect(Collectors.toList())
         );
 
         if(filtriranaBolest.isPresent()) {
 
-            tablicaBolesti.getItems().setAll(filtriranaBolest.get());
+            tablicaVirusa.getItems().setAll(filtriranaBolest.get());
 
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        bolesti = new ArrayList<>();
-        observableListaBolesti = FXCollections.observableArrayList();
+        virusi = new ArrayList<>();
+        observableListaVirusa = FXCollections.observableArrayList();
 
         try {
-            bolesti = BazaPodataka.dohvatiSveBolesti();
+            virusi = BazaPodataka.dohvatiSveBolesti();
 
-            observableListaBolesti.addAll(bolesti.stream().filter(z -> (!(z instanceof Virus))).collect(Collectors.toList()));
+            observableListaVirusa.addAll(virusi.stream().filter(z -> ((z instanceof Virus))).collect(Collectors.toList()));
 
             nazivStupac.setCellValueFactory(new PropertyValueFactory<Bolest, String>("naziv"));
             simptomiStupac.setCellValueFactory(new PropertyValueFactory<Set<Simptom>, String>("simptomi"));
             idStupac.setCellValueFactory(new PropertyValueFactory<Long, String>("id"));
 
-            tablicaBolesti.setItems(observableListaBolesti);
+            tablicaVirusa.setItems(observableListaVirusa);
         } catch (SQLException | IOException throwables) {
             logger.error(throwables.getMessage());
             PocetniEkranController.neuspjesanUnos(throwables.getMessage());
@@ -83,19 +84,19 @@ public class PretragaBolestiController implements Initializable {
 
     }
 
-    public static ObservableList<Bolest> getObservableListaBolesti() {
-        return observableListaBolesti;
+    public static ObservableList<Bolest> getObservableListaVirusa() {
+        return observableListaVirusa;
     }
 
-    public static void setObservableListaBolesti(ObservableList<Bolest> observableListaBolesti) {
-        PretragaBolestiController.observableListaBolesti = observableListaBolesti;
+    public static void setObservableListaVirusa(ObservableList<Bolest> observableListaVirusa) {
+        PretragaVirusiController.observableListaVirusa = observableListaVirusa;
     }
 
-    public static List<Bolest> getBolesti() {
-        return bolesti;
+    public static List<Bolest> getVirusi() {
+        return virusi;
     }
 
-    public static void setBolesti(List<Bolest> bolesti) {
-        PretragaBolestiController.bolesti = bolesti;
+    public static void setVirusi(List<Bolest> virusi) {
+        PretragaVirusiController.virusi = virusi;
     }
 }

@@ -10136,7 +10136,7 @@ java.lang.NumberFormatException: For input string: "ASDAS"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:68)
 	at java.base/java.lang.Integer.parseInt(Integer.java:652)
 	at java.base/java.lang.Integer.parseInt(Integer.java:770)
-	at main.java.sample.DodavanjeNoveZupanijeController.dodajNovuZupaniju(DodavanjeNoveZupanijeController.java:38)
+	at main.java.sample.controllers.DodavanjeNoveZupanijeController.dodajNovuZupaniju(DodavanjeNoveZupanijeController.java:38)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10199,7 +10199,7 @@ java.lang.NumberFormatException: For input string: "ASDAS"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:68)
 	at java.base/java.lang.Integer.parseInt(Integer.java:652)
 	at java.base/java.lang.Integer.parseInt(Integer.java:770)
-	at main.java.sample.DodavanjeNoveZupanijeController.dodajNovuZupaniju(DodavanjeNoveZupanijeController.java:38)
+	at main.java.sample.controllers.DodavanjeNoveZupanijeController.dodajNovuZupaniju(DodavanjeNoveZupanijeController.java:38)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10340,7 +10340,7 @@ java.lang.NumberFormatException: For input string: "asdasd"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:68)
 	at java.base/java.lang.Integer.parseInt(Integer.java:652)
 	at java.base/java.lang.Integer.parseInt(Integer.java:770)
-	at main.java.sample.DodavanjeNoveOsobeController.dodajNovuOsobu(DodavanjeNoveOsobeController.java:43)
+	at main.java.sample.controllers.DodavanjeNoveOsobeController.dodajNovuOsobu(DodavanjeNoveOsobeController.java:43)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10403,10 +10403,10 @@ java.lang.NumberFormatException: For input string: "aa"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:68)
 	at java.base/java.lang.Long.parseLong(Long.java:707)
 	at java.base/java.lang.Long.parseLong(Long.java:832)
-	at main.java.sample.DodavanjeNoveOsobeController.lambda$dodajNovuOsobu$0(DodavanjeNoveOsobeController.java:78)
+	at main.java.sample.controllers.DodavanjeNoveOsobeController.lambda$dodajNovuOsobu$0(DodavanjeNoveOsobeController.java:78)
 	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:948)
 	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:658)
-	at main.java.sample.DodavanjeNoveOsobeController.dodajNovuOsobu(DodavanjeNoveOsobeController.java:75)
+	at main.java.sample.controllers.DodavanjeNoveOsobeController.dodajNovuOsobu(DodavanjeNoveOsobeController.java:75)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10510,7 +10510,7 @@ java.lang.NumberFormatException: For input string: "aa"
 2020-12-17 04:30:55,747 ERROR [JavaFX Application Thread] m.j.s.DodavanjeNoveBolestiController [DodavanjeNoveBolestiController.java:117] Bolest istih simptoma greska: 
 main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su duplikati iz prethodno unesenih bolesti!
 	at main.java.sample.Main.provjeraBolestiIstihSimptoma(Main.java:667)
-	at main.java.sample.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
+	at main.java.sample.controllers.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10571,7 +10571,7 @@ main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su du
 2020-12-17 04:30:57,959 ERROR [JavaFX Application Thread] m.j.s.DodavanjeNoveBolestiController [DodavanjeNoveBolestiController.java:117] Bolest istih simptoma greska: 
 main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su duplikati iz prethodno unesenih bolesti!
 	at main.java.sample.Main.provjeraBolestiIstihSimptoma(Main.java:667)
-	at main.java.sample.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
+	at main.java.sample.controllers.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10632,7 +10632,7 @@ main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su du
 2020-12-17 04:30:59,798 ERROR [JavaFX Application Thread] m.j.s.DodavanjeNoveBolestiController [DodavanjeNoveBolestiController.java:117] Bolest istih simptoma greska: 
 main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su duplikati iz prethodno unesenih bolesti!
 	at main.java.sample.Main.provjeraBolestiIstihSimptoma(Main.java:667)
-	at main.java.sample.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
+	at main.java.sample.controllers.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10693,7 +10693,7 @@ main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su du
 2020-12-17 04:31:03,328 ERROR [JavaFX Application Thread] m.j.s.DodavanjeNoveBolestiController [DodavanjeNoveBolestiController.java:117] Bolest istih simptoma greska: 
 main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su duplikati iz prethodno unesenih bolesti!
 	at main.java.sample.Main.provjeraBolestiIstihSimptoma(Main.java:667)
-	at main.java.sample.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
+	at main.java.sample.controllers.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -10754,7 +10754,7 @@ main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su du
 2020-12-17 04:31:07,059 ERROR [JavaFX Application Thread] m.j.s.DodavanjeNoveBolestiController [DodavanjeNoveBolestiController.java:117] Bolest istih simptoma greska: 
 main.java.sample.covidportal.iznimke.BolestIstihSimptoma: Uneseni simptomi su duplikati iz prethodno unesenih bolesti!
 	at main.java.sample.Main.provjeraBolestiIstihSimptoma(Main.java:667)
-	at main.java.sample.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
+	at main.java.sample.controllers.DodavanjeNoveBolestiController.dodajNovuBolest(DodavanjeNoveBolestiController.java:72)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -11249,3 +11249,14 @@ HAVING SUMA = ? AND BROJ = ? [22018-199]
 2020-12-28 22:54:05,319 INFO [JavaFX Application Thread] m.j.s.DodavanjeNoveOsobeController [DodavanjeNoveOsobeController.java:92] Unesena je osoba: awd
 2021-01-17 00:53:00,078 INFO [JavaFX Application Thread] m.j.s.DodavanjeNoveOsobeController [DodavanjeNoveOsobeController.java:92] Unesena je osoba: Mislav
 2021-01-17 00:53:26,033 INFO [JavaFX Application Thread] m.j.s.DodavanjeNoveOsobeController [DodavanjeNoveOsobeController.java:92] Unesena je osoba: Tomo
+2021-01-17 14:44:03,805 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:03,815 ERROR [JavaFX Application Thread] m.j.s.PretragaZupanijaController [PretragaZupanijaController.java:102] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:07,809 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:09,813 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:11,815 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:13,818 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:13,982 ERROR [JavaFX Application Thread] m.j.s.PretragaSimptomaController [PretragaSimptomaController.java:68] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:15,823 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:44:17,826 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:45:09,696 ERROR [pool-2-thread-1] m.j.s.c.n.NajviseZarazenihNit [NajviseZarazenihNit.java:56] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]
+2021-01-17 14:45:09,696 ERROR [JavaFX Application Thread] m.j.s.PretragaZupanijaController [PretragaZupanijaController.java:102] Connection is broken: "java.net.SocketTimeoutException: Connect timed out: localhost" [90067-199]

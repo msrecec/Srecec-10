@@ -1,9 +1,8 @@
-package main.java.sample;
+package main.java.sample.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import main.java.sample.covidportal.baza.BazaPodataka;
-import main.java.sample.covidportal.enumeracija.VrijednostSimptoma;
 import main.java.sample.covidportal.iznimke.DuplikatSimptoma;
 import main.java.sample.covidportal.iznimke.PraznoPolje;
 import main.java.sample.covidportal.model.Simptom;

@@ -1,4 +1,4 @@
-package main.java.sample;
+package main.java.sample.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import main.java.sample.covidportal.baza.BazaPodataka;
 import main.java.sample.covidportal.enumeracija.VrijednostSimptoma;
 import main.java.sample.covidportal.model.Simptom;
-import main.java.sample.covidportal.model.VrijednostEnumeracije;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

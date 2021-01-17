@@ -71,4 +71,10 @@ public class Bolest extends ImenovaniEntitet implements Serializable {
     public void setSimptomi(Set<Simptom> simptomi) {
         this.simptomi = simptomi;
     }
+
+
+    @Override
+    public String toString() {
+        return "Bolest: " + super.getNaziv();
+    }
 }

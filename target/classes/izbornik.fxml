@@ -5,7 +5,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.GridPane?>
 
-<MenuBar prefHeight="500.0" prefWidth="800.0" GridPane.columnSpan="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.sample.PocetniEkranController">
+<MenuBar prefHeight="500.0" prefWidth="800.0" GridPane.columnSpan="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.sample.controllers.PocetniEkranController">
     <menus>
         <Menu mnemonicParsing="false" text="Županije">
             <items>

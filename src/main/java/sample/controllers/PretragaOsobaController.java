@@ -1,4 +1,4 @@
-package main.java.sample;
+package main.java.sample.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

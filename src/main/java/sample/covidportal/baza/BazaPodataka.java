@@ -374,6 +374,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
 
     }
 
+
     /**
      * Unosi zupaniju iz result set-a i vraca novi zupaniju
      *
@@ -405,6 +406,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
     public static Zupanija dohvatiZupaniju(Long idZupanije) throws SQLException, IOException, NepostojecaZupanija {
         Zupanija zupanija;
         Connection veza = connectToDatabase();
+        Statement stmt = veza.createStatement();
         PreparedStatement upit = veza.prepareStatement("SELECT * FROM ZUPANIJA WHERE ID = ?");
 
         upit.setString(1, String.valueOf(idZupanije));
@@ -420,6 +422,35 @@ public class BazaPodataka implements VrijednostEnumeracije {
         closeConnectionToDatabase(veza);
 
         return zupanija;
+    }
+
+    /**
+     * Dohvaca zupaniju iz baze podataka
+     *
+     * @return zupanija koju dohvacamo
+     * @throws SQLException ako je greska prilikom rada s bazom
+     * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
+     * @throws NepostojecaZupanija ako ne pronađemo odgovarajuću županiju
+     */
+
+    public static Zupanija dohvatiZupanijuSNajvecimBrojemZarazenih() throws SQLException, IOException, NepostojecaZupanija {
+        Zupanija zupanija;
+        Connection veza = connectToDatabase();
+        Statement stmt = veza.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM ZUPANIJA\n" +
+                "ORDER BY BROJ_STANOVNIKA/BROJ_ZARAZENIH_STANOVNIKA\n" +
+                "LIMIT 1");
+
+        if(rs.next()) {
+            zupanija = unosZupanije(rs);
+        } else {
+            throw new NepostojecaZupanija();
+        }
+
+        closeConnectionToDatabase(veza);
+
+        return zupanija;
+
     }
 
 
