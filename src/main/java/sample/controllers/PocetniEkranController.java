@@ -29,24 +29,28 @@ public class PocetniEkranController implements Initializable {
         Parent pretragaSimptomaFrame = FXMLLoader.load(getClass().getClassLoader().getResource("pretragaSimptoma.fxml"));
         Scene pretragaSimptomaScene = new Scene(pretragaSimptomaFrame, 800, 500);
         Main.getMainStage().setScene(pretragaSimptomaScene);
+        Main.getMainStage().setTitle("Pretraga simptoma");
     }
     public void prikaziEkranZaPretraguBolesti () throws IOException {
         switchWindow();
         Parent pretragaBolestiFrame = FXMLLoader.load(getClass().getClassLoader().getResource("pretragaBolesti.fxml"));
         Scene pretragaBolestiScene = new Scene(pretragaBolestiFrame, 800, 500);
         Main.getMainStage().setScene(pretragaBolestiScene);
+        Main.getMainStage().setTitle("Pretraga bolesti");
     }
     public void prikaziEkranZaPretraguVirusa () throws IOException {
         switchWindow();
         Parent pretragaVirusaFrame = FXMLLoader.load(getClass().getClassLoader().getResource("pretragaVirusi.fxml"));
         Scene pretragaVirusaScene = new Scene(pretragaVirusaFrame, 800, 500);
         Main.getMainStage().setScene(pretragaVirusaScene);
+        Main.getMainStage().setTitle("Pretraga virusa");
     }
     public void prikaziEkranZaPretraguOsoba () throws IOException {
         switchWindow();
         Parent pretragaOsobaFrame = FXMLLoader.load(getClass().getClassLoader().getResource("pretragaOsoba.fxml"));
         Scene pretragaOsobaScene = new Scene(pretragaOsobaFrame, 800, 500);
         Main.getMainStage().setScene(pretragaOsobaScene);
+        Main.getMainStage().setTitle("Pretraga osoba");
     }
 
     public void prikaziEkranZaDodavanjeNoveZupanije() throws IOException {
@@ -54,6 +58,7 @@ public class PocetniEkranController implements Initializable {
         Parent dodavanjeZupanijeFrame = FXMLLoader.load(getClass().getClassLoader().getResource("dodavanjeZupanije.fxml"));
         Scene dodavanjeZupanijeScene = new Scene(dodavanjeZupanijeFrame, 800, 500);
         Main.getMainStage().setScene(dodavanjeZupanijeScene);
+        Main.getMainStage().setTitle("Dodavanje nove županije");
     }
 
     public void prikaziEkranZaDodavanjeNovogSimptoma() throws IOException {
@@ -61,6 +66,7 @@ public class PocetniEkranController implements Initializable {
         Parent dodavanjeSimptomaFrame = FXMLLoader.load(getClass().getClassLoader().getResource("dodavanjeSimptoma.fxml"));
         Scene dodavanjeSimptomaScene = new Scene(dodavanjeSimptomaFrame, 800, 500);
         Main.getMainStage().setScene(dodavanjeSimptomaScene);
+        Main.getMainStage().setTitle("Dodavanje novog simptoma");
     }
 
     public void prikaziEkranZaDodavanjeNoveBolesti() throws IOException {
@@ -68,6 +74,7 @@ public class PocetniEkranController implements Initializable {
         Parent dodavanjeBolestiFrame = FXMLLoader.load(getClass().getClassLoader().getResource("dodavanjeBolesti.fxml"));
         Scene dodavanjeBolestiScene = new Scene(dodavanjeBolestiFrame, 800, 500);
         Main.getMainStage().setScene(dodavanjeBolestiScene);
+        Main.getMainStage().setTitle("Dodavanje nove bolesti");
     }
 
     public void prikaziEkranZaDodavanjeNovogVirusa() throws IOException {
@@ -75,6 +82,7 @@ public class PocetniEkranController implements Initializable {
         Parent dodavanjeVirusaFrame = FXMLLoader.load(getClass().getClassLoader().getResource("dodavanjeVirusa.fxml"));
         Scene dodavanjeVirusaScene = new Scene(dodavanjeVirusaFrame, 800, 500);
         Main.getMainStage().setScene(dodavanjeVirusaScene);
+        Main.getMainStage().setTitle("Dodavanje novog virusa");
     }
 
     public void prikaziEkranZaDodavanjeNoveOsobe() throws IOException {
@@ -82,6 +90,7 @@ public class PocetniEkranController implements Initializable {
         Parent dodavanjeOsobeFrame = FXMLLoader.load(getClass().getClassLoader().getResource("dodavanjeOsobe.fxml"));
         Scene dodavanjeOsobeScene = new Scene(dodavanjeOsobeFrame, 800, 500);
         Main.getMainStage().setScene(dodavanjeOsobeScene);
+        Main.getMainStage().setTitle("Dodavanje nove osobe");
     }
 
     public static void uspjesanUnos() {

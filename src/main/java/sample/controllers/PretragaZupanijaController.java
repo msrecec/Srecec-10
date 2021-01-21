@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import main.java.sample.Main;
 import main.java.sample.covidportal.baza.BazaPodataka;
 import main.java.sample.covidportal.model.Zupanija;
+import main.java.sample.covidportal.niti.DohvatiSveZupanijeNit;
 import main.java.sample.covidportal.niti.NajviseZarazenihNit;
 import main.java.sample.covidportal.sort.CovidSorter;
 import org.slf4j.Logger;
@@ -35,8 +36,8 @@ public class PretragaZupanijaController implements Initializable {
 
     private static ObservableList<Zupanija> observableListaZupanija;
 
-    private static SortedSet<Zupanija> zupanije;
-    private static ExecutorService executorServiceIspisZupanije;
+    private static ExecutorService executorServiceDohvatZupanija;
+    private static Timeline clock = null;
 
     @FXML
     private TableView tablicaZupanija ;
@@ -55,7 +56,7 @@ public class PretragaZupanijaController implements Initializable {
         String uneseniNazivZupanije = unosNazivaZupanije.getText().toLowerCase();
 
         Optional<List<Zupanija>> filtriraneZupanije = Optional.ofNullable(
-                zupanije
+                observableListaZupanija
                 .stream()
                 .filter(z -> z.getNaziv().toLowerCase().contains(uneseniNazivZupanije))
                 .collect(Collectors.toList())
@@ -69,40 +70,18 @@ public class PretragaZupanijaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        zupanije = new TreeSet<>(new CovidSorter());
         observableListaZupanija = FXCollections.observableArrayList();
-        try {
 
-            Main.getMainStage().getScene().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, this::destroyNajviseZarazenihNitThread);
+        nazivStupac.setCellValueFactory(new PropertyValueFactory<Zupanija, String>("naziv"));
+        stanovniciStupac.setCellValueFactory(new PropertyValueFactory<Zupanija, Integer>("brojStanovnika"));
+        zarazeniStupac.setCellValueFactory(new PropertyValueFactory<Zupanija, Integer>("brojZarazenih"));
+        idStupac.setCellValueFactory(new PropertyValueFactory<Long, String>("id"));
 
-            if(!NajviseZarazenihNit.exists()) {
-                executorServiceIspisZupanije = Executors.newSingleThreadExecutor();
-                executorServiceIspisZupanije.execute(new NajviseZarazenihNit());
-            }
+        executorServiceDohvatZupanija = Executors.newSingleThreadExecutor();
+        executorServiceDohvatZupanija.execute(new DohvatiSveZupanijeNit(observableListaZupanija, tablicaZupanija));
 
-            Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
-                String naziv = NajviseZarazenihNit.getImeZupanije();
-                Main.getMainStage().setTitle("Županija s najvećim postotkom zaraženih je: " + naziv);
-            }), new KeyFrame(Duration.seconds(Main.MAX_VRIJEME_CEKANJA)));
+        startAnimation();
 
-            clock.setCycleCount(Animation.INDEFINITE);
-            clock.play();
-
-            zupanije = BazaPodataka.dohvatiSveZupanije();
-            observableListaZupanija.addAll(zupanije);
-
-            nazivStupac.setCellValueFactory(new PropertyValueFactory<Zupanija, String>("naziv"));
-            stanovniciStupac.setCellValueFactory(new PropertyValueFactory<Zupanija, Integer>("brojStanovnika"));
-            zarazeniStupac.setCellValueFactory(new PropertyValueFactory<Zupanija, Integer>("brojZarazenih"));
-            idStupac.setCellValueFactory(new PropertyValueFactory<Long, String>("id"));
-
-            tablicaZupanija.setItems(observableListaZupanija);
-
-
-        } catch (SQLException | IOException throwables) {
-            logger.error(throwables.getMessage());
-            PocetniEkranController.neuspjesanUnos(throwables.getMessage());
-        }
     }
 
     public static ObservableList<Zupanija> getObservableListaZupanija() {
@@ -113,15 +92,28 @@ public class PretragaZupanijaController implements Initializable {
         PretragaZupanijaController.observableListaZupanija = observableListaZupanija;
     }
 
-    public static SortedSet<Zupanija> getZupanije() {
-        return zupanije;
+    private static void startAnimation() {
+        clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            String naziv = NajviseZarazenihNit.getImeZupanije();
+            Main.getMainStage().setTitle("Županija s najvećim postotkom zaraženih je: " + naziv);
+        }), new KeyFrame(Duration.seconds(Main.MAX_VRIJEME_CEKANJA)));
+
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
     }
 
-    private void destroyNajviseZarazenihNitThread(WindowEvent event) {
-        NajviseZarazenihNit.destroy();
+    public static void stopAnimation() {
+        if(clock != null) {
+            clock.stop();
+            clock.getKeyFrames().clear();
+            clock = null;
+            System.out.println("Stopping animation");
+        }
     }
 
-    public static void setZupanije(SortedSet<Zupanija> zupanije) {
-        PretragaZupanijaController.zupanije = zupanije;
+    public static Timeline getClock() {
+        return clock;
     }
+
+
 }

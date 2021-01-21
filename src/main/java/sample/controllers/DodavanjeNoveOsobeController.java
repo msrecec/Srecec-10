@@ -7,6 +7,8 @@ import main.java.sample.covidportal.iznimke.*;
 import main.java.sample.covidportal.model.Bolest;
 import main.java.sample.covidportal.model.Osoba;
 import main.java.sample.covidportal.model.Zupanija;
+import main.java.sample.covidportal.niti.SpremiNovuBolestNit;
+import main.java.sample.covidportal.niti.SpremiNovuOsobuNit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,12 +18,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class DodavanjeNoveOsobeController {
 
     private static final Logger logger = LoggerFactory.getLogger(DodavanjeNoveOsobeController.class);
-
+    private static ExecutorService executorServiceDodavanjeNoveOsobe;
     @FXML
     private TextField imeOsobe;
     @FXML
@@ -87,15 +91,14 @@ public class DodavanjeNoveOsobeController {
                     .kontaktiraneOsobe(finalKontaktiraneOsobe)
                     .build();
 
-            BazaPodataka.spremiNovuOsobu(novaOsoba);
+            executorServiceDodavanjeNoveOsobe = Executors.newSingleThreadExecutor();
+            executorServiceDodavanjeNoveOsobe.execute(new SpremiNovuOsobuNit(novaOsoba));
 
-            logger.info("Unesena je osoba: " + novaOsoba.getIme());
-
-            PocetniEkranController.uspjesanUnos();
 
         } catch (IOException | PraznoPolje | NumberFormatException | SQLException | DuplikatKontaktiraneOsobe | NepostojecaOsoba | NepostojecaZupanija | NepostojecaBolest ex) {
             logger.error(ex.getMessage());
             PocetniEkranController.neuspjesanUnos(ex.getMessage());
         }
     }
+
 }

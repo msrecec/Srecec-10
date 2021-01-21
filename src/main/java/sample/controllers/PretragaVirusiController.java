@@ -13,6 +13,7 @@ import main.java.sample.covidportal.iznimke.PraznoPolje;
 import main.java.sample.covidportal.model.Bolest;
 import main.java.sample.covidportal.model.Simptom;
 import main.java.sample.covidportal.model.Virus;
+import main.java.sample.covidportal.niti.DohvatiSveBolestiNit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,15 +21,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class PretragaVirusiController implements Initializable {
 
-    private static List<Bolest> virusi;
-
     private static final Logger logger = LoggerFactory.getLogger(PretragaVirusiController.class);
 
     private static ObservableList<Bolest> observableListaVirusa;
+    private static ExecutorService executorServiceDohvatBolesti;
 
     @FXML
     private TableView tablicaVirusa ;
@@ -49,7 +51,7 @@ public class PretragaVirusiController implements Initializable {
         String uneseniNazivVirusa = unosNazivaVirusa.getText().toLowerCase();
 
         Optional<List<Bolest>> filtriranaBolest = Optional.ofNullable(
-                virusi
+                observableListaVirusa
                         .stream()
                         .filter(z -> ((z instanceof Virus)) && z.getNaziv().toLowerCase().contains(uneseniNazivVirusa))
                         .collect(Collectors.toList())
@@ -64,23 +66,14 @@ public class PretragaVirusiController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        virusi = new ArrayList<>();
         observableListaVirusa = FXCollections.observableArrayList();
 
-        try {
-            virusi = BazaPodataka.dohvatiSveBolesti();
+        nazivStupac.setCellValueFactory(new PropertyValueFactory<Bolest, String>("naziv"));
+        simptomiStupac.setCellValueFactory(new PropertyValueFactory<Set<Simptom>, String>("simptomi"));
+        idStupac.setCellValueFactory(new PropertyValueFactory<Long, String>("id"));
 
-            observableListaVirusa.addAll(virusi.stream().filter(z -> ((z instanceof Virus))).collect(Collectors.toList()));
-
-            nazivStupac.setCellValueFactory(new PropertyValueFactory<Bolest, String>("naziv"));
-            simptomiStupac.setCellValueFactory(new PropertyValueFactory<Set<Simptom>, String>("simptomi"));
-            idStupac.setCellValueFactory(new PropertyValueFactory<Long, String>("id"));
-
-            tablicaVirusa.setItems(observableListaVirusa);
-        } catch (SQLException | IOException throwables) {
-            logger.error(throwables.getMessage());
-            PocetniEkranController.neuspjesanUnos(throwables.getMessage());
-        }
+        executorServiceDohvatBolesti = Executors.newSingleThreadExecutor();
+        executorServiceDohvatBolesti.execute(new DohvatiSveBolestiNit(observableListaVirusa, tablicaVirusa, true));
 
     }
 
@@ -92,11 +85,4 @@ public class PretragaVirusiController implements Initializable {
         PretragaVirusiController.observableListaVirusa = observableListaVirusa;
     }
 
-    public static List<Bolest> getVirusi() {
-        return virusi;
-    }
-
-    public static void setVirusi(List<Bolest> virusi) {
-        PretragaVirusiController.virusi = virusi;
-    }
 }

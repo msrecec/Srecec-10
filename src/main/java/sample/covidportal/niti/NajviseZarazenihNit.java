@@ -1,6 +1,8 @@
 package main.java.sample.covidportal.niti;
 
 import main.java.sample.Main;
+import main.java.sample.controllers.PocetniEkranController;
+import main.java.sample.controllers.PretragaZupanijaController;
 import main.java.sample.covidportal.baza.BazaPodataka;
 import main.java.sample.covidportal.iznimke.NepostojecaZupanija;
 import main.java.sample.covidportal.model.Zupanija;
@@ -16,19 +18,6 @@ public class NajviseZarazenihNit implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(NajviseZarazenihNit.class);
     private static Zupanija zupanija = null;
-    private static boolean exists = false;
-
-    public NajviseZarazenihNit() {
-        exists = true;
-    }
-
-    public static boolean exists() {
-        return exists;
-    }
-
-    public static void destroy() {
-        exists = false;
-    }
 
     public static String getImeZupanije() {
         if (Optional.ofNullable(zupanija).isPresent()) {
@@ -38,12 +27,30 @@ public class NajviseZarazenihNit implements Runnable {
         }
     }
 
+    private synchronized Zupanija dohvatiZupanijuSNajvecimBrojemZarazenihSync() throws NepostojecaZupanija, SQLException, IOException {
+        Zupanija zupanija;
+        while(BazaPodataka.aktivnaVezaSBazomPodataka) {
+            try {
+                System.out.println("Waiting for thread...");
+                wait();
+            } catch(InterruptedException e) {
+                logger.error(e.getMessage());
+                PocetniEkranController.neuspjesanUnos(e.getMessage());
+            }
+        }
+        BazaPodataka.aktivnaVezaSBazomPodataka = true;
+        zupanija = BazaPodataka.dohvatiZupanijuSNajvecimBrojemZarazenih();
+        BazaPodataka.aktivnaVezaSBazomPodataka = false;
+        notifyAll();
+        return zupanija;
+    }
+
     @Override
     public void run() {
         System.out.println("Creating thread...");
-        while(exists) {
+        while(true) {
             try {
-                zupanija = BazaPodataka.dohvatiZupanijuSNajvecimBrojemZarazenih();
+                zupanija = dohvatiZupanijuSNajvecimBrojemZarazenihSync();
 
                 System.out.println("Zupanija s najvecim postotkom zarazenih je: " + zupanija.getNaziv());
 
@@ -52,7 +59,11 @@ public class NajviseZarazenihNit implements Runnable {
             } catch (SQLException | IOException | InterruptedException | NepostojecaZupanija throwables) {
                 logger.error(throwables.getMessage());
                 System.out.println("Exception in thread...");
+                BazaPodataka.aktivnaVezaSBazomPodataka = false;
+                notifyAll();
+                break;
             }
+            System.out.println("Destroying thread...");
         }
         System.out.println("Destroying thread...");
     }

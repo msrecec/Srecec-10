@@ -9,6 +9,7 @@ import main.java.sample.covidportal.iznimke.NepostojeciSimptom;
 import main.java.sample.covidportal.iznimke.PraznoPolje;
 import main.java.sample.covidportal.model.Simptom;
 import main.java.sample.covidportal.model.Virus;
+import main.java.sample.covidportal.niti.SpremiNovuBolestNit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,18 +19,23 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class DodavanjeNovogVirusaController {
 
 
     private static final Logger logger = LoggerFactory.getLogger(DodavanjeNovogVirusaController.class);
-
+    private static ExecutorService executorServiceDodavanjeNovogVirusa;
     @FXML
     private TextField nazivVirusa;
 
     @FXML
     private TextField simptomi;
+
+
+
 
     public void dodajNoviVirus() {
         try {
@@ -48,19 +54,15 @@ public class DodavanjeNovogVirusaController {
 
             for(Long i : indexList) {
                 dohvaceniSimptom = BazaPodataka.dohvatiSimptom(i);
-                System.out.println("Index od simptoma: " + i);
                 simptomi.add(dohvaceniSimptom);
             }
 
             Virus noviVirus = new Virus((long)1, nazivVirusaText, simptomi);
 
-            BazaPodataka.spremiNovuBolest(noviVirus);
+            executorServiceDodavanjeNovogVirusa = Executors.newSingleThreadExecutor();
+            executorServiceDodavanjeNovogVirusa.execute(new SpremiNovuBolestNit(noviVirus));
 
-            logger.info("Unesen je virus: " + noviVirus.getNaziv());
-
-            PocetniEkranController.uspjesanUnos();
-
-        } catch (IOException | PraznoPolje | NumberFormatException | BolestIstihSimptoma | SQLException | NepostojeciSimptom | NepostojecaBolest e) {
+        } catch (IOException | PraznoPolje | NumberFormatException | BolestIstihSimptoma | SQLException | NepostojeciSimptom e) {
             logger.error(e.getMessage());
             PocetniEkranController.neuspjesanUnos(e.getMessage());
         }

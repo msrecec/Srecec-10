@@ -14,6 +14,8 @@ import main.java.sample.covidportal.iznimke.NepostojecaZupanija;
 import main.java.sample.covidportal.model.Bolest;
 import main.java.sample.covidportal.model.Osoba;
 import main.java.sample.covidportal.model.Zupanija;
+import main.java.sample.covidportal.niti.DohvatiSveBolestiNit;
+import main.java.sample.covidportal.niti.DohvatiSveOsobeNit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,8 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class PretragaOsobaController implements Initializable {
@@ -29,7 +33,7 @@ public class PretragaOsobaController implements Initializable {
 
     private static final Logger logger = LoggerFactory.getLogger(PretragaOsobaController.class);
 
-    private static List<Osoba> osobe;
+    private static ExecutorService executorServiceDohvatOsoba;
 
     @FXML
     private TableView tablicaOsoba ;
@@ -51,10 +55,10 @@ public class PretragaOsobaController implements Initializable {
     public void pretraga() {
         String uneseniNazivOsobe = unosNazivaOsobe.getText().toLowerCase();
 
-        Optional<List<Osoba>> filtriraneOsobePoImenu = Optional.ofNullable(osobe.stream()
+        Optional<List<Osoba>> filtriraneOsobePoImenu = Optional.ofNullable(observableListaOsoba.stream()
                 .filter(z -> (z.getIme().toLowerCase().contains(uneseniNazivOsobe)))
                 .collect(Collectors.toList()));
-        Optional<List<Osoba>> filtriraneOsobePoPrezimenu = Optional.ofNullable(osobe.stream()
+        Optional<List<Osoba>> filtriraneOsobePoPrezimenu = Optional.ofNullable(observableListaOsoba.stream()
                 .filter(z -> (z.getPrezime().toLowerCase().contains(uneseniNazivOsobe)))
                 .collect(Collectors.toList()));
 
@@ -78,24 +82,19 @@ public class PretragaOsobaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            osobe = new ArrayList<>();
-            observableListaOsoba = FXCollections.observableArrayList();
-            osobe = BazaPodataka.dohvatiSveOsobe();
-            observableListaOsoba.addAll(osobe);
+        observableListaOsoba = FXCollections.observableArrayList();
 
-            imeStupac.setCellValueFactory(new PropertyValueFactory<Osoba, String>("ime"));
-            prezimeStupac.setCellValueFactory(new PropertyValueFactory<Osoba, String>("prezime"));
-            datumRodjenjaStupac.setCellValueFactory(new PropertyValueFactory<Osoba, Date>("datumRodjenja"));
-            zupanijaStupac.setCellValueFactory(new PropertyValueFactory<Osoba, Zupanija>("zupanija"));
-            bolestStupac.setCellValueFactory(new PropertyValueFactory<Osoba, Bolest>("zarazenBolescu"));
-            kontaktiraneOsobeStupac.setCellValueFactory(new PropertyValueFactory<Osoba, List<Osoba>>("kontaktiraneOsobe"));
 
-            tablicaOsoba.setItems(observableListaOsoba);
-        } catch (SQLException | IOException | NepostojecaBolest | NepostojecaZupanija throwables) {
-            logger.error(throwables.getMessage());
-            PocetniEkranController.neuspjesanUnos(throwables.getMessage());
-        }
+        imeStupac.setCellValueFactory(new PropertyValueFactory<Osoba, String>("ime"));
+        prezimeStupac.setCellValueFactory(new PropertyValueFactory<Osoba, String>("prezime"));
+        datumRodjenjaStupac.setCellValueFactory(new PropertyValueFactory<Osoba, Date>("datumRodjenja"));
+        zupanijaStupac.setCellValueFactory(new PropertyValueFactory<Osoba, Zupanija>("zupanija"));
+        bolestStupac.setCellValueFactory(new PropertyValueFactory<Osoba, Bolest>("zarazenBolescu"));
+        kontaktiraneOsobeStupac.setCellValueFactory(new PropertyValueFactory<Osoba, List<Osoba>>("kontaktiraneOsobe"));
+
+        executorServiceDohvatOsoba = Executors.newSingleThreadExecutor();
+        executorServiceDohvatOsoba.execute(new DohvatiSveOsobeNit(observableListaOsoba,tablicaOsoba));
+
     }
 
     public static ObservableList<Osoba> getObservableListaOsoba() {
@@ -104,13 +103,5 @@ public class PretragaOsobaController implements Initializable {
 
     public static void setObservableListaOsoba(ObservableList<Osoba> observableListaOsoba) {
         PretragaOsobaController.observableListaOsoba = observableListaOsoba;
-    }
-
-    public static List<Osoba> getOsobe() {
-        return osobe;
-    }
-
-    public static void setOsobe(List<Osoba> osobe) {
-        PretragaOsobaController.osobe = osobe;
     }
 }

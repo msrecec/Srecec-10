@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class BazaPodataka implements VrijednostEnumeracije {
     private static final String DATABASE_CONFIGURATION_FILE = "src\\main\\resources\\database.properties";
+    public static Boolean aktivnaVezaSBazomPodataka = false;
 
     /**
      * Stvara novu konekciju na bazu podataka i vraca referencu na njenu instancu
@@ -23,7 +24,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static Connection connectToDatabase() throws SQLException, IOException {
+    private static synchronized Connection connectToDatabase() throws SQLException, IOException {
         Properties svojstva = new Properties();
 
         svojstva.load(new FileReader(DATABASE_CONFIGURATION_FILE));
@@ -44,7 +45,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws SQLException ako je greska prilikom rada s bazom
      */
 
-    public static void closeConnectionToDatabase(Connection veza) throws SQLException {
+    private static synchronized void closeConnectionToDatabase(Connection veza) throws SQLException {
         veza.close();
     }
 
@@ -56,7 +57,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static List<Simptom> dohvatiSveSimptome() throws SQLException, IOException {
+    public static synchronized List<Simptom> dohvatiSveSimptome() throws SQLException, IOException {
         List<Simptom> simptomi = new ArrayList<>();
         Connection veza = connectToDatabase();
         Statement stmt = veza.createStatement();
@@ -81,7 +82,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static Simptom dohvatiSimptom(Long idSimptoma) throws SQLException, IOException, NepostojeciSimptom {
+    public static synchronized Simptom dohvatiSimptom(Long idSimptoma) throws SQLException, IOException, NepostojeciSimptom {
         Simptom simptom;
         Connection veza = connectToDatabase();
         PreparedStatement upit = veza.prepareStatement("SELECT * FROM SIMPTOM WHERE ID = ?");
@@ -109,14 +110,12 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws SQLException ako je greska prilikom rada s bazom
      */
 
-    private static Simptom unosSimptoma(ResultSet rs) throws SQLException {
+    private static synchronized Simptom unosSimptoma(ResultSet rs) throws SQLException {
         long id = rs.getLong("ID");
         String naziv = rs.getString("NAZIV");
         String vrijednostSimptoma = rs.getString("VRIJEDNOST");
 
         Simptom simptom = new Simptom(id, naziv, VrijednostEnumeracije.vrijednostZarazno(vrijednostSimptoma));
-
-        System.out.println(simptom.getVrijednost().getVrijednost());
 
         return simptom;
     }
@@ -130,7 +129,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws DuplikatSimptoma ako postoje dva simptoma sa istim nazivom i vrijednosti
      */
 
-    public static void spremiNoviSimptom(Simptom simptom) throws SQLException, IOException, DuplikatSimptoma {
+    public static synchronized void spremiNoviSimptom(Simptom simptom) throws SQLException, IOException, DuplikatSimptoma {
         Connection veza = connectToDatabase();
 
         // Provjera duplikata
@@ -174,7 +173,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static List<Bolest> dohvatiSveBolesti() throws SQLException, IOException {
+    public static synchronized List<Bolest> dohvatiSveBolesti() throws SQLException, IOException {
         List<Bolest> bolesti = new ArrayList<>();
         Connection veza = connectToDatabase();
         Statement stmt = veza.createStatement();
@@ -200,7 +199,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static Bolest dohvatiBolest(Long idBolesti) throws SQLException, IOException, NepostojecaBolest {
+    public static synchronized Bolest dohvatiBolest(Long idBolesti) throws SQLException, IOException, NepostojecaBolest {
         Bolest bolest;
         Connection veza = connectToDatabase();
         PreparedStatement upit = veza.prepareStatement("SELECT * FROM BOLEST WHERE ID = ?");
@@ -229,7 +228,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws SQLException ako je greska prilikom rada s bazom
      */
 
-    private static Bolest unosBolesti(ResultSet rs, Connection veza) throws SQLException {
+    private static synchronized Bolest unosBolesti(ResultSet rs, Connection veza) throws SQLException {
         Bolest bolest;
         long idBolesti = rs.getLong("ID");
         String nazivBolesti = rs.getString("NAZIV");
@@ -268,7 +267,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws BolestIstihSimptoma ako se u bazi nalazi bolest koja ima iste simptome
      */
 
-    public static void spremiNovuBolest(Bolest bolest) throws BolestIstihSimptoma, IOException, SQLException, NepostojecaBolest {
+    public static synchronized void spremiNovuBolest(Bolest bolest) throws BolestIstihSimptoma, IOException, SQLException, NepostojecaBolest {
         Connection veza = connectToDatabase();
         ResultSet nrs;
         long idNovoSpremljeneBolesti;
@@ -358,7 +357,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static SortedSet<Zupanija> dohvatiSveZupanije() throws SQLException, IOException {
+    public static synchronized SortedSet<Zupanija> dohvatiSveZupanije() throws SQLException, IOException {
         SortedSet<Zupanija> zupanije = new TreeSet<>(new CovidSorter());
         Connection veza = connectToDatabase();
         Statement stmt = veza.createStatement();
@@ -383,7 +382,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws SQLException ako je greska prilikom rada s bazom
      */
 
-    private static Zupanija unosZupanije(ResultSet rs) throws SQLException {
+    private static synchronized Zupanija unosZupanije(ResultSet rs) throws SQLException {
         long id = rs.getLong("ID");
         String naziv = rs.getString("NAZIV");
         Integer brojStanovnika = rs.getInt("BROJ_STANOVNIKA");
@@ -403,7 +402,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static Zupanija dohvatiZupaniju(Long idZupanije) throws SQLException, IOException, NepostojecaZupanija {
+    public static synchronized Zupanija dohvatiZupaniju(Long idZupanije) throws SQLException, IOException, NepostojecaZupanija {
         Zupanija zupanija;
         Connection veza = connectToDatabase();
         Statement stmt = veza.createStatement();
@@ -433,7 +432,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws NepostojecaZupanija ako ne pronađemo odgovarajuću županiju
      */
 
-    public static Zupanija dohvatiZupanijuSNajvecimBrojemZarazenih() throws SQLException, IOException, NepostojecaZupanija {
+    public static synchronized Zupanija dohvatiZupanijuSNajvecimBrojemZarazenih() throws SQLException, IOException, NepostojecaZupanija {
         Zupanija zupanija;
         Connection veza = connectToDatabase();
         Statement stmt = veza.createStatement();
@@ -464,7 +463,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws ZupanijaIstogNaziva ako se u bazi nalazi zupanija koja ima isti naziv
      */
 
-    public static void spremiNovuZupaniju(Zupanija zupanija) throws ZupanijaIstogNaziva, IOException, SQLException {
+    public static synchronized void spremiNovuZupaniju(Zupanija zupanija) throws ZupanijaIstogNaziva, IOException, SQLException {
         Connection veza = connectToDatabase();
 
         // Provjera duplikata
@@ -509,7 +508,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static List<Osoba> dohvatiSveOsobe() throws SQLException, IOException, NepostojecaBolest, NepostojecaZupanija {
+    public static synchronized List<Osoba> dohvatiSveOsobe() throws SQLException, IOException, NepostojecaBolest, NepostojecaZupanija {
         List<Osoba> osobe = new ArrayList<>();
         Connection veza = connectToDatabase();
         Statement stmt = veza.createStatement();
@@ -539,7 +538,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    private static Osoba unosOsobe(ResultSet rs, Connection veza) throws SQLException, IOException, NepostojecaZupanija, NepostojecaBolest {
+    private static synchronized Osoba unosOsobe(ResultSet rs, Connection veza) throws SQLException, IOException, NepostojecaZupanija, NepostojecaBolest {
         Osoba osoba;
         long idOsobe = rs.getLong("ID");
         String imeOsobe = rs.getString("IME");
@@ -566,7 +565,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws SQLException ako je greska prilikom rada s bazom
      */
 
-    private static void unosKontaktiranihOsoba(Osoba osoba, List<Osoba> osobe, Connection veza) throws SQLException {
+    private static synchronized void unosKontaktiranihOsoba(Osoba osoba, List<Osoba> osobe, Connection veza) throws SQLException {
         List<Long> idKontaktiranihOsoba = new ArrayList<>();
         List<Osoba> kontaktiraneOsobe;
         PreparedStatement upit = veza.prepareStatement("SELECT KONTAKTIRANA.ID FROM OSOBA\n" +
@@ -599,7 +598,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws IOException ako je greska prilikom dohvacanja konfiguracijske datoteke
      */
 
-    public static Osoba dohvatiOsobu(Long idOsobe) throws SQLException, IOException, NepostojecaOsoba, NepostojecaBolest, NepostojecaZupanija {
+    public static synchronized Osoba dohvatiOsobu(Long idOsobe) throws SQLException, IOException, NepostojecaOsoba, NepostojecaBolest, NepostojecaZupanija {
         Osoba osoba;
         Connection veza = connectToDatabase();
         PreparedStatement upit = veza.prepareStatement("SELECT * FROM OSOBA WHERE ID = ?");
@@ -630,7 +629,7 @@ public class BazaPodataka implements VrijednostEnumeracije {
      * @throws DuplikatKontaktiraneOsobe ako se u bazi nalazi bolest koja ima iste simptome
      */
 
-    public static void spremiNovuOsobu(Osoba osoba) throws DuplikatKontaktiraneOsobe, IOException, SQLException {
+    public static synchronized void spremiNovuOsobu(Osoba osoba) throws DuplikatKontaktiraneOsobe, IOException, SQLException {
         Connection veza = connectToDatabase();
         ResultSet nrs;
         PreparedStatement upit;
@@ -688,5 +687,4 @@ public class BazaPodataka implements VrijednostEnumeracije {
         closeConnectionToDatabase(veza);
 
     }
-
 }

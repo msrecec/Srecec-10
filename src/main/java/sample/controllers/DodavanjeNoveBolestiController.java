@@ -9,6 +9,9 @@ import main.java.sample.covidportal.iznimke.NepostojeciSimptom;
 import main.java.sample.covidportal.iznimke.PraznoPolje;
 import main.java.sample.covidportal.model.Bolest;
 import main.java.sample.covidportal.model.Simptom;
+import main.java.sample.covidportal.model.Virus;
+import main.java.sample.covidportal.niti.SpremiNoviSimptomNit;
+import main.java.sample.covidportal.niti.SpremiNovuBolestNit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,17 +21,23 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class DodavanjeNoveBolestiController {
 
     private static final Logger logger = LoggerFactory.getLogger(DodavanjeNoveBolestiController.class);
+    private static ExecutorService executorServiceDodavanjeNoveBolesti;
+    public static boolean uspio = true;
 
     @FXML
     private TextField nazivBolesti;
 
     @FXML
     private TextField simptomi;
+
+
 
     public void dodajNovuBolest() {
         try {
@@ -47,19 +56,15 @@ public class DodavanjeNoveBolestiController {
 
             for(Long i : indexList) {
                 dohvaceniSimptom = BazaPodataka.dohvatiSimptom(i);
-                System.out.println("Index od simptoma: " + i);
                 simptomi.add(dohvaceniSimptom);
             }
 
             Bolest novaBolest = new Bolest((long)1, nazivBolestiText, simptomi);
 
-            BazaPodataka.spremiNovuBolest(novaBolest);
+            executorServiceDodavanjeNoveBolesti = Executors.newSingleThreadExecutor();
+            executorServiceDodavanjeNoveBolesti.execute(new SpremiNovuBolestNit(novaBolest));
 
-            logger.info("Unesena je bolest: " + novaBolest.getNaziv());
-
-            PocetniEkranController.uspjesanUnos();
-
-        } catch (IOException | PraznoPolje | NumberFormatException | BolestIstihSimptoma | SQLException | NepostojeciSimptom | NepostojecaBolest e) {
+        } catch (IOException | PraznoPolje | NumberFormatException | BolestIstihSimptoma | SQLException | NepostojeciSimptom e) {
             logger.error(e.getMessage());
             PocetniEkranController.neuspjesanUnos(e.getMessage());
         }
